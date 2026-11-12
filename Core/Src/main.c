@@ -267,6 +267,28 @@ int main(void)
       word_ptr++;
   }
 
+  printf("\r\n");
+
+
+  /* ============================================
+     8. VOID POINTERS
+     ============================================ */
+
+  char character = 'a';
+  int number1 = 526;
+  void *prt;
+
+  // pointer point to character
+  ptr = &character;
+
+  printf("Pointer ptr:       %p\r\n", ptr);
+  printf("Char value:        %c\r\n\n", *(char *)ptr);
+
+  // pointer point to number1
+  ptr = &number1;
+
+  printf("Pointer ptr:       %p\r\n", ptr);
+  printf("Int value:         %d\r\n\n", *(int *)ptr);
 
 
 }
