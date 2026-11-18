@@ -47,25 +47,23 @@
 /* Private variables ---------------------------------------------------------*/
 UART_HandleTypeDef huart2;
 
-/* USER CODE BEGIN PV */
 
-/* USER CODE END PV */
+struct app_desc {
+    int people_count;
+    char name_initial;
+};
+
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 
-/* USER CODE BEGIN PFP */
 
-
-
-/* USER CODE END PFP */
-
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
+// Function prototype
+int64_t sum(const int64_t *xs, size_t length);
+int func_sp(struct app_desc *s, struct app_desc p);
+int func_dp(struct app_desc **app, struct app_desc p);
 
 /**
   * @brief  The application entry point.
@@ -109,6 +107,7 @@ int main(void)
   /* ============================================
      1. ARRAY INITIALIZATION, ADDRESS AND SIZE
      ============================================ */
+  printf("1. ARRAY INITIALIZATION, ADDRESS AND SIZE\r\n\n");
 
   char digits[4] = {'1', '2', '3', '\0'};
 
@@ -131,6 +130,7 @@ int main(void)
   /* ============================================
      2. ARRAY POINTERS AND MEMORY ADDRESSES
      ============================================ */
+  printf("2. ARRAY POINTERS AND MEMORY ADDRESSES\r\n\n");
 
   char letters2[4] = {'a', 'b', 'c', '\0'};
   char *letter2_p;
@@ -159,6 +159,7 @@ int main(void)
   /* ============================================
      3. ARRAY INDEXING VS POINTER ARITHMETIC
      ============================================ */
+  printf("3. ARRAY INDEXING VS POINTER ARITHMETICs\r\n\n");
 
   char letters3[4] = {'a', 'b', 'c', 'd'};
   char *letter3_p;
@@ -192,7 +193,7 @@ int main(void)
   /* ============================================
      4. TYPE CAST POINTER to show increment smaller steps
      ============================================ */
-
+  printf("4. TYPE CAST POINTER to show increment smaller steps\r\n\n");
 
   uint16_t num[4] = {1, 2, 3, 4};
 
@@ -212,6 +213,7 @@ int main(void)
   /* ============================================
      5. POINTERS TO SINGLE VARIABLES
      ============================================ */
+  printf("5. POINTERS TO SINGLE VARIABLES\r\n\n");
 
   uint16_t number = 236;
   uint16_t *ptr = &number;
@@ -229,11 +231,8 @@ int main(void)
   /* ============================================
      6. PASSING ARRAYS TO FUNCTIONS
      ============================================ */
+  printf("6. PASSING ARRAYS TO FUNCTIONS\r\n\n");
 
-
-
-  // Function prototype
-  int64_t sum(const int64_t *xs, size_t length);
 
   // Example code inside main()
   int64_t nums[] = {1, 2, 3, 4};
@@ -248,6 +247,7 @@ int main(void)
   /* ============================================
      7. ARRAY OF STRING POINTERS
      ============================================ */
+  printf("7. ARRAY OF STRING POINTERS\r\n\n");
 
   #define COUNT 3
 
@@ -273,6 +273,7 @@ int main(void)
   /* ============================================
      8. VOID POINTERS
      ============================================ */
+  printf("8. VOID POINTERS\r\n\n");
 
   char character = 'a';
   int number1 = 526;
@@ -289,6 +290,45 @@ int main(void)
 
   printf("Pointer ptr:       %p\r\n", ptr);
   printf("Int value:         %d\r\n\n", *(int *)ptr);
+
+
+  /* ============================================
+     9. SINGLE VS DOUBLE POINTERS - Single
+     ============================================ */
+  printf("9. SINGLE VS DOUBLE POINTERS - Single\r\n\n");
+
+  int ret;
+
+  struct app_desc s;
+
+  struct app_desc params;
+
+  params.people_count = 15;
+  params.name_initial = 'M';
+
+
+
+  ret = func_sp(&s, params);
+
+
+  printf("People Count:   %d\r\n", s.people_count);
+  printf("Name Initial:   %c\r\n\n", s.name_initial);
+
+  /* ============================================
+     10. SINGLE VS DOUBLE POINTERS - Double
+     ============================================ */
+  printf("10. SINGLE VS DOUBLE POINTERS - Double\r\n\n");
+  struct app_desc *app = NULL; //app is already a pointer
+
+  ret = func_dp(&app, params); // so &app is a pointer to that pointer.
+
+
+  printf("People Count: %d\r\n", app->people_count);
+  printf("Name Initial: %c\r\n\n", app->name_initial);
+
+  free(app);
+  app = NULL;
+
 
 
 }
@@ -311,6 +351,48 @@ int64_t sum(const int64_t *xs, size_t length)
 
     return result;
 }
+
+
+
+/* ============================================
+   func_sp FUNCTION
+   The single-pointer function updates s
+   Place outside main()
+   ============================================ */
+
+int func_sp(struct app_desc *sp, struct app_desc parm)
+{
+	sp->people_count = parm.people_count;
+	sp->name_initial = parm.name_initial;
+
+	return 0;
+}
+
+
+
+/* ============================================
+   func_dp FUNCTION
+   The double-pointer function allocates a new struct and updates dp
+   Place outside main()
+   ============================================ */
+
+int func_dp(struct app_desc **dp, struct app_desc parm)
+{
+	struct app_desc *app_description;
+
+	app_description = (struct app_desc *)malloc(sizeof(*app_description));
+	if (!app_description)
+		return -1;
+
+	app_description->people_count = parm.people_count;
+	app_description->name_initial = parm.name_initial;
+
+	*dp = app_description;
+
+	return 0;
+}
+
+
 
 /**
   * @brief System Clock Configuration
